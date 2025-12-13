@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#FDE68A" />
+      <stop offset="1" stop-color="#FCA5A5" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="420" fill="url(#g)" />
+  <g transform="translate(60,80)">
+    <text x="0" y="0" font-size="54" font-family="Georgia, serif" fill="#6B21A8">Sweet Shop</text>
+    <text x="0" y="48" font-size="20" font-family="Arial, sans-serif" fill="#4B5563">Festive treats, delivered with love</text>
+  </g>
+</svg>
