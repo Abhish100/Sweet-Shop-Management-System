@@ -1,191 +1,181 @@
-# Sweet Shop Management System
+🍬 Sweet Shop Management System
 
-A full-stack TDD Kata implementation of a Sweet Shop Management System with React frontend, Node.js/TypeScript backend, and PostgreSQL database.
+A full-stack Sweet Shop Management System built with React (Vite) on the frontend and Node.js + Express + Prisma + PostgreSQL on the backend.
+The application supports authentication, role-based access (Admin/User), sweet management, order handling, and image generation via the Gemini API.
 
-## Features
+📌 Project Overview
 
-### Backend API (RESTful)
-- **Authentication**: JWT-based auth with OTP email verification
-- **User Management**: Registration, login, role-based access (User/Admin)
-- **Sweet Management**: CRUD operations for sweets inventory
-- **Order Management**: Complete order lifecycle
-- **AI Integration**: Gemini-powered sweet image generation
-- **Search & Filtering**: Advanced search by name, category, price range
+The Sweet Shop Management System is designed to digitize the operations of a traditional sweet shop. It allows users to browse sweets, place orders, and view order history, while administrators can manage sweets, view orders, and perform administrative actions through a secure admin panel.
 
-### Frontend (React/TypeScript)
-- **Modern UI**: Responsive design with Tailwind CSS
-- **Real-time Updates**: Live inventory and cart management
-- **Admin Panel**: Full CRUD operations for sweets
-- **AI Sommelier**: AI-powered sweet recommendations
-- **Shopping Cart**: Complete e-commerce flow
+✨ Key Features
 
-### Database
-- **PostgreSQL**: Production-ready database
-- **Prisma ORM**: Type-safe database operations
-- **Migrations**: Version-controlled schema changes
+User authentication with JWT
 
-## Tech Stack
+Role-based access (Admin / User)
 
-- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS
-- **Backend**: Node.js, Express, TypeScript, Prisma
-- **Database**: PostgreSQL
-- **Authentication**: JWT, bcrypt
-- **Email**: Nodemailer with Gmail SMTP
-- **AI**: Google Gemini 2.0
-- **Testing**: Jest, Supertest
-- **Deployment**: Vercel (Frontend + Backend)
+Sweet inventory management (CRUD)
 
-## Quick Start
+Order management
 
-### Prerequisites
-- Node.js 18+
-- PostgreSQL database
-- Gmail account for email (or configure alternative SMTP)
+Email notifications (optional)
 
-### Installation
+AI-based image generation using Gemini API
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd sweet-shop-management-system
-   ```
+Secure backend with Prisma ORM and PostgreSQL
 
-2. **Backend Setup**
-   ```bash
-   cd backend
-   npm install
-   cp .env.example .env
-   # Edit .env with your database URL and other configs
-   npx prisma migrate dev
-   npx prisma generate
-   npm run seed
-   npm run dev
-   ```
+Modern frontend using React + Vite
 
-3. **Frontend Setup**
-   ```bash
-   cd ..
-   npm install
-   npm run dev
-   ```
+🛠 Tech Stack
+Frontend
 
-4. **Access the application**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:4000
+React
 
-## API Documentation
+Vite
 
-### Authentication Endpoints
-- `POST /api/auth/register/initiate` - Start registration
-- `POST /api/auth/register/verify` - Complete registration with OTP
-- `POST /api/auth/login` - User login
+TypeScript
 
-### Sweets Endpoints (Protected)
-- `GET /api/sweets` - List all sweets
-- `POST /api/sweets` - Add new sweet (Admin)
-- `PUT /api/sweets/:id` - Update sweet (Admin)
-- `DELETE /api/sweets/:id` - Delete sweet (Admin)
-- `GET /api/sweets/search` - Search sweets
-- `POST /api/sweets/:id/purchase` - Purchase sweet
-- `POST /api/sweets/:id/restock` - Restock sweet (Admin)
+Axios
 
-### Orders Endpoints (Protected)
-- `GET /api/orders` - Get user orders
-- `POST /api/orders` - Create new order
+Backend
 
-## Testing
+Node.js
 
-```bash
+Express
+
+TypeScript
+
+Prisma ORM
+
+PostgreSQL
+
+JWT Authentication
+
+Nodemailer
+
+📂 Repository Structure
+Sweet-Shop-Management-System/
+│
+├── backend/        # Express + Prisma backend
+│
+├── frontend/       # React + Vite frontend
+│
+├── README.md
+└── package.json
+
+🚀 Local Setup Instructions
+1️⃣ Prerequisites
+
+Make sure you have the following installed:
+
+Node.js (v18+ recommended)
+
+npm
+
+PostgreSQL (or a hosted DB like Supabase/Neon)
+
+🔧 Backend Setup (Local)
+cd backend
+npm install
+
+Create .env file in backend/
+DATABASE_URL=postgresql://user:password@localhost:5432/sweet_shop
+JWT_SECRET=your-very-strong-secret
+NODE_ENV=development
+GEMINI_API_KEY=your_gemini_key
+FRONTEND_URL=http://localhost:3000
+
+Run migrations and seed
+npx prisma migrate dev
+npx prisma db seed
+
+Start backend server
+npm run dev
+
+
+Backend will run at:
+
+http://localhost:4000
+
+🎨 Frontend Setup (Local)
+cd frontend
+npm install
+
+Create .env file in frontend/
+VITE_API_URL=http://localhost:4000/api
+
+Start frontend
+npm run dev
+
+
+Frontend will run at:
+
+http://localhost:3000
+
+🔐 Default Admin Credentials
+Username: admin
+Password: admin123
+
+🧪 Test Report
+How to Run Tests
 cd backend
 npm test
-```
 
-## Deployment
+Test Coverage
 
-### Vercel Deployment
+Authentication tests
 
-1. **Create Vercel Account**
-   - Sign up at https://vercel.com
+Authorization checks
 
-2. **Set up PostgreSQL**
-   - Use Vercel Postgres or external provider
-   - Update `DATABASE_URL` in environment variables
+Sweet CRUD operations
 
-3. **Deploy Backend**
-   ```bash
-   cd backend
-   vercel --prod
-   ```
+Order flow validation
 
-4. **Deploy Frontend**
-   ```bash
-   cd ..
-   vercel --prod
-   ```
+📄 Test Results
 
-5. **Environment Variables**
-   - `DATABASE_URL`: PostgreSQL connection string
-   - `JWT_SECRET`: Secure random string
-   - `GEMINI_API_KEY`: Google Gemini API key
-   - `EMAIL_*`: Email configuration
+✅ All tests passed successfully with no failures.
 
-## My AI Usage
+Screenshot placeholder:
+📸 Paste test output screenshot here
 
-### AI Tools Used
-- **GitHub Copilot**: Used for code completion, boilerplate generation, and debugging assistance
-- **ChatGPT**: Used for brainstorming API architecture, troubleshooting deployment issues, and generating test cases
+![Test Results](./screenshots/test-results.png)
 
-### How AI Was Used
-1. **Code Generation**: Copilot helped generate initial controller structures, middleware, and utility functions
-2. **Testing**: ChatGPT assisted in writing comprehensive test cases and understanding Jest patterns
-3. **Debugging**: Both tools helped identify and fix TypeScript errors and database connection issues
-4. **Documentation**: AI helped structure this README and API documentation
-5. **Architecture Decisions**: ChatGPT provided insights on best practices for the tech stack
+📸 Application Screenshots
 
-### AI Impact on Workflow
-- **Productivity**: AI tools significantly sped up development by providing code suggestions and catching errors early
-- **Learning**: Working with AI helped understand modern development patterns and best practices
-- **Quality**: AI-assisted code reviews and suggestions improved code quality and consistency
-- **Challenges**: Had to verify AI-generated code for correctness and ensure it matched project requirements
+Create a folder named screenshots/ in the root directory
+Paste images there and reference them like below.
 
-### Co-authored Commits
-All commits involving AI assistance are marked with co-author trailers:
-```
-Co-authored-by: GitHub Copilot <copilot@github.com>
-Co-authored-by: ChatGPT <chatgpt@openai.com>
-```
+🔑 Login Page
+![Login Page]
+<img width="1882" height="911" alt="image" src="https://github.com/user-attachments/assets/cd29be56-1f02-412b-a692-291d7b7d7387" /
 
-## Project Structure
+🧾 Orders Page
+![Orders Page]
+<img width="865" height="932" alt="image" src="https://github.com/user-attachments/assets/53ca2d30-29c7-4c32-8177-c8f9da89705b" />
 
-```
-├── backend/
-│   ├── src/
-│   │   ├── controllers/     # API route handlers
-│   │   ├── services/        # Business logic
-│   │   ├── repositories/    # Database operations
-│   │   ├── middlewares/     # Auth & validation
-│   │   ├── routes/          # API routes
-│   │   ├── tests/           # Unit & integration tests
-│   │   └── utils/           # Helper functions
-│   ├── prisma/
-│   │   ├── schema.prisma    # Database schema
-│   │   ├── migrations/      # DB migrations
-│   │   └── seed.ts          # Test data
-│   └── package.json
-├── components/               # React components
-├── contexts/                 # React context providers
-├── services/                 # Frontend API services
-├── types.ts                  # TypeScript types
-└── package.json
-```
 
-## Contributing
 
-1. Follow TDD principles - write tests before implementation
-2. Use meaningful commit messages
-3. Update documentation for API changes
-4. Ensure all tests pass before committing
+🤖 My AI Usage (Mandatory)
 
-## License
+I used AI tools (including ChatGPT) as a development assistant to:
 
-MIT License - see LICENSE file for details
+Debug TypeScript and Prisma-related issues
+
+Improve error handling and validation logic
+
+Help structure deployment configurations
+
+Assist in documentation writing and formatting
+
+All application logic, architecture decisions, and integrations were implemented and verified by me.
+No code was copied directly from other repositories or developers.
+
+⚠️ Academic Integrity Statement
+
+This project is my original work.
+AI tools were used responsibly for guidance and productivity, not for plagiarism.
+Any similarities with other projects are coincidental and limited to common design patterns.
+
+📬 Contact
+
+Author: Abhishek
+GitHub: https://github.com/2237324itcec-cpu
