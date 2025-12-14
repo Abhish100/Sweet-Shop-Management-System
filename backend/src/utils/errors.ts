@@ -4,9 +4,14 @@ export class AppError extends Error {
 
   constructor(message: string, statusCode: number = 500) {
     super(message)
+
     this.statusCode = statusCode
     this.isOperational = true
-    Error.captureStackTrace(this, this.constructor)
+
+    // ✅ Safe for TypeScript + Node
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor)
+    }
   }
 }
 
@@ -33,4 +38,3 @@ export class ForbiddenError extends AppError {
     super(message, 403)
   }
 }
-
