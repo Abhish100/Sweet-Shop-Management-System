@@ -1,9 +1,21 @@
 import jwt from 'jsonwebtoken'
-import 'dotenv/config'
-const JWT_SECRET = process.env.JWT_SECRET || 'secret'
-export function signToken(payload: object) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' })
+import { env } from './env'
+
+export interface JWTPayload {
+  sub: string
+  role: string
+  iat?: number
+  exp?: number
 }
-export function verifyToken<T = any>(token: string) {
-  return jwt.verify(token, JWT_SECRET) as T
+
+export function signToken(payload: { sub: string; role: string }): string {
+  return jwt.sign(payload, env.JWT_SECRET, { expiresIn: '7d' })
+}
+
+export function verifyToken(token: string): JWTPayload {
+  try {
+    return jwt.verify(token, env.JWT_SECRET) as JWTPayload
+  } catch (error) {
+    throw new Error('Invalid or expired token')
+  }
 }

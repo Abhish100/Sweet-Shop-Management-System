@@ -1,27 +1,58 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import * as authService from '../services/authService'
+import { validate } from '../utils/validation'
+import { initiateRegisterSchema, verifyOtpSchema, loginSchema } from '../utils/validation'
+import { AppError } from '../utils/errors'
+import type { AuthRequest } from '../types'
 
-export async function register(req: Request, res: Response) {
-  const { email, password } = req.body
+export async function initiateRegister(req: AuthRequest, res: Response): Promise<void> {
   try {
-    console.log('authController.register: called', email)
-    const u = await authService.register(email, password)
-    console.log('authController.register: created user', u.email)
-    res.status(201).json(u)
-  } catch (err: any) {
-    res.status(400).json({ error: err.message })
+    const validatedData = validate(initiateRegisterSchema, req.body)
+    const result = await authService.initiateRegister(
+      validatedData.username,
+      validatedData.email,
+      validatedData.password
+    )
+    res.json(result)
+  } catch (error) {
+    if (error instanceof AppError) {
+      res.status(error.statusCode).json({ error: error.message })
+    } else {
+      res.status(500).json({ error: 'Internal server error' })
+    }
   }
 }
 
-export async function login(req: Request, res: Response) {
-  const { email, password } = req.body
+export async function verifyOtp(req: AuthRequest, res: Response): Promise<void> {
   try {
-    console.log('authController.login: called', email)
-    const out = await authService.login(email, password)
-    console.log('authController.login: service returned', out ? 'ok' : 'no')
-    res.json(out)
-  } catch (err: any) {
-    res.status(401).json({ error: err.message })
+    const validatedData = validate(verifyOtpSchema, req.body)
+    const result = await authService.verifyOtpAndRegister(
+      validatedData.email,
+      validatedData.otp,
+      validatedData.username,
+      validatedData.password
+    )
+    res.status(201).json(result)
+  } catch (error) {
+    if (error instanceof AppError) {
+      res.status(error.statusCode).json({ error: error.message })
+    } else {
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  }
+}
+
+export async function login(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const validatedData = validate(loginSchema, req.body)
+    const result = await authService.login(validatedData.identifier, validatedData.password)
+    res.json(result)
+  } catch (error) {
+    if (error instanceof AppError) {
+      res.status(error.statusCode).json({ error: error.message })
+    } else {
+      res.status(500).json({ error: 'Internal server error' })
+    }
   }
 }
 

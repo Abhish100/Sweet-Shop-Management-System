@@ -9,20 +9,65 @@ datasource db {
 
 model User {
   id        String   @id @default(uuid())
+  username  String   @unique
   email     String   @unique
   password  String
   role      String   @default("USER")
   createdAt DateTime @default(now())
+  
+  @@index([username])
+  @@index([email])
+}
+
+model OtpVerification {
+  id        String   @id @default(uuid())
+  email     String
+  otp       String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  @@index([email])
+  @@index([expiresAt])
 }
 
 model Sweet {
-  id        String   @id @default(uuid())
-  name      String
-  category  String
-  price     Float
-  quantity  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String      @id @default(uuid())
+  name        String
+  category    String
+  price       Float
+  quantity    Int
+  description String?     @default("")
+  imageUrl    String?     @default("")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
+  
+  @@index([category])
+  @@index([name])
 }
 
-// role field as string to maintain compatibility with sqlite
+model Order {
+  id              String      @id @default(uuid())
+  userId          String
+  totalAmount     Float
+  status          String      @default("Processing")
+  deliveryAddress String
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  sweetId   String
+  quantity  Int
+  price     Float
+  createdAt DateTime @default(now())
+  sweet     Sweet    @relation(fields: [sweetId], references: [id])
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([sweetId])
+}
+

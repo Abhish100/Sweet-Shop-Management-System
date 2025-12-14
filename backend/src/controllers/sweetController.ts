@@ -1,29 +1,123 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import * as sweetService from '../services/sweetService'
+import { validate } from '../utils/validation'
+import {
+  createSweetSchema,
+  updateSweetSchema,
+  searchSweetsSchema,
+  restockSchema,
+} from '../utils/validation'
+import { AppError } from '../utils/errors'
+import type { AuthRequest } from '../types'
 
-export async function addSweet(req: Request, res: Response) {
+export async function addSweet(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const s = await sweetService.addSweet(req.body)
-    res.status(201).json(s)
-  } catch (err: any) { res.status(400).json({ error: err.message }) }
+    const validatedData = validate(createSweetSchema, req.body)
+    const sweet = await sweetService.addSweet(validatedData)
+    res.status(201).json(sweet)
+  } catch (error) {
+    if (error instanceof AppError) {
+      res.status(error.statusCode).json({ error: error.message })
+    } else {
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  }
 }
-export async function listSweets(_req: Request, res: Response) {
-  const s = await sweetService.listSweets()
-  res.json(s)
+
+export async function listSweets(_req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const sweets = await sweetService.listSweets()
+    res.json(sweets)
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' })
+  }
 }
-export async function searchSweets(req: Request, res: Response) {
-  const s = await sweetService.searchSweets(req.query)
-  res.json(s)
+
+export async function searchSweets(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const validatedQuery = validate(searchSweetsSchema, req.query)
+    const sweets = await sweetService.searchSweets(validatedQuery)
+    res.json(sweets)
+  } catch (error) {
+    if (error instanceof AppError) {
+      res.status(error.statusCode).json({ error: error.message })
+    } else {
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  }
 }
-export async function updateSweet(req: Request, res: Response) {
-  try { const s = await sweetService.updateSweet(req.params.id, req.body); res.json(s) } catch (err: any) { res.status(400).json({ error: err.message }) }
+
+export async function updateSweet(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const validatedData = validate(updateSweetSchema, req.body)
+    const sweet = await sweetService.updateSweet(req.params.id, validatedData)
+    res.json(sweet)
+  } catch (error) {
+    if (error instanceof AppError) {
+      res.status(error.statusCode).json({ error: error.message })
+    } else {
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  }
 }
-export async function deleteSweet(req: Request, res: Response) {
-  try { const s = await sweetService.deleteSweet(req.params.id); res.json(s) } catch (err: any) { res.status(400).json({ error: err.message }) }
+
+export async function deleteSweet(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const sweet = await sweetService.deleteSweet(req.params.id)
+    res.json(sweet)
+  } catch (error) {
+    if (error instanceof AppError) {
+      res.status(error.statusCode).json({ error: error.message })
+    } else {
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  }
 }
-export async function purchaseSweet(req: Request, res: Response) {
-  try { const s = await sweetService.purchase(req.params.id); res.json(s) } catch (err: any) { res.status(400).json({ error: err.message }) }
+
+export async function purchaseSweet(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const sweet = await sweetService.purchase(req.params.id)
+    res.json(sweet)
+  } catch (error) {
+    if (error instanceof AppError) {
+      res.status(error.statusCode).json({ error: error.message })
+    } else {
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  }
 }
-export async function restockSweet(req: Request, res: Response) {
-  try { const s = await sweetService.restock(req.params.id, Number(req.body.amount || 0)); res.json(s) } catch (err: any) { res.status(400).json({ error: err.message }) }
+
+export async function restockSweet(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const validatedData = validate(restockSchema, req.body)
+    const sweet = await sweetService.restock(req.params.id, validatedData.amount)
+    res.json(sweet)
+  } catch (error) {
+    if (error instanceof AppError) {
+      res.status(error.statusCode).json({ error: error.message })
+    } else {
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  }
+}
+
+export async function updateSweetImage(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { id } = req.params
+    const { imageUrl } = req.body
+
+    if (!imageUrl) {
+      res.status(400).json({ error: 'imageUrl is required' })
+      return
+    }
+
+    const sweet = await sweetService.updateSweetImage(id, imageUrl)
+    res.json(sweet)
+  } catch (error) {
+    if (error instanceof AppError) {
+      res.status(error.statusCode).json({ error: error.message })
+    } else {
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  }
 }
